@@ -4,6 +4,7 @@ import com.zup.biblioteca.model.LivroModel;
 import com.zup.biblioteca.service.LivroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,27 +27,32 @@ public class LivroController {
     @Autowired
     LivroService livroService;
 
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping
     public List<LivroModel> getAllLivros() {
         return livroService.getAllLivros();
     }
 
     @GetMapping(path = "/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     public Optional<LivroModel> getLivroById(@PathVariable Long id) {
         return livroService.getLivroById(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public LivroModel createLivro(@RequestBody LivroModel livroModel) {
         return livroService.createLivro(livroModel);
     }
 
-    @PutMapping
-    public LivroModel updateLivro(@RequestBody LivroModel livroModel) {
-        return livroService.updateLivro(livroModel);
-    }
+    @PutMapping(path = "/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+    public LivroModel updateLivro(@RequestBody LivroModel livroModel, @PathVariable Long id) {
 
+        return livroService.updateLivro(livroModel, id);
+    }
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @DeleteMapping(path = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteLivro(@PathVariable Long id) {

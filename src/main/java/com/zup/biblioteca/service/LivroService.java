@@ -2,6 +2,7 @@ package com.zup.biblioteca.service;
 
 import com.zup.biblioteca.model.LivroModel;
 import com.zup.biblioteca.repository.LivroRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,13 @@ public class LivroService {
         return livroRepository.save(livroModel);
     }
 
-    public LivroModel updateLivro(LivroModel livroModel) {
-        return livroRepository.save(livroModel);
+    public LivroModel updateLivro(LivroModel livroModel, Long id) {
+
+        LivroModel livro = getLivroById(id).get();
+
+        BeanUtils.copyProperties(livroModel, livro, "id");
+
+        return livroRepository.save(livro);
     }
 
     public void deleteLivro(Long id) {

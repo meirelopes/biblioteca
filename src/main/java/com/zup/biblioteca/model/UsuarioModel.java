@@ -27,14 +27,14 @@ public class UsuarioModel implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    //@ManyToMany
-    //@JoinTable(name = "TB_USUARIOS_ROLES", joinColumns = @JoinColumn(name = "id_usuario"),
-      //      inverseJoinColumns = @JoinColumn(name = "id_role"))
-   // private List<RoleModel> roles;
+    @ManyToMany
+    @JoinTable(name = "TB_USUARIOS_ROLES", joinColumns = @JoinColumn(name = "id_usuario"),
+            inverseJoinColumns = @JoinColumn(name = "id_role"))
+    private List<RoleModel> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.roles;
     }
 
     @Override
